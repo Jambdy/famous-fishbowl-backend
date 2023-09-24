@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  famous-fishbowl-backend
+
+  Sample SAM Template for famous-fishbowl-backend
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+    MemorySize: 128
+
+Resources:
+  FamousFishbowlCRUDFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: famous_fishbowl_CRUD/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Events:
+        PutGame:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FamousFishbowlAPI
+            Path: /games
+            Method: put
+            Auth:
+              ApiKeyRequired: true
+        GetGame:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FamousFishbowlAPI
+            Path: /games/{id}
+            Method: get
+            Auth:
+              ApiKeyRequired: true
+        DeleteGame:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FamousFishbowlAPI
+            Path: /games/{id}
+            Method: delete
+            Auth:
+              ApiKeyRequired: true
+
+  FishbowlDynamoDB:
+    Type: AWS::Serverless::SimpleTable
+    Properties:
+      PrimaryKey:
+        Name: id
+        Type: String
+      TableName: famous-fishbowl
+
+  FamousFishbowlAPI:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Auth:
+        ApiKeyRequired: true
+        UsagePlan:
+          CreateUsagePlan: PER_API
+          UsagePlanName: GatewayAuthorization
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  FamousFishbowlAPI:
+    Value: !Sub "https://${FamousFishbowlAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/games/"
+  FamousFishbowlCRUDFunction:
+    Value: !GetAtt FamousFishbowlCRUDFunction.Arn
