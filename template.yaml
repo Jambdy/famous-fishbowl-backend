@@ -64,7 +64,6 @@ Resources:
     Properties:
       StageName: Prod
       Auth:
-        ApiKeyRequired: true
         UsagePlan:
           CreateUsagePlan: PER_API
           UsagePlanName: GatewayAuthorization
