@@ -64,7 +64,7 @@ Resources:
           CreateUsagePlan: PER_API
           UsagePlanName: GatewayAuthorization
 
-  LambdaDynamoDbWriteConnector:
+  LambdaDynamoDbConnector:
     Type: AWS::Serverless::Connector
     Properties:
       Source:
