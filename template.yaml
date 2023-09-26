@@ -10,6 +10,11 @@ Globals:
   Function:
     Timeout: 3
     MemorySize: 128
+  Api:
+    Cors:
+      AllowMethods: "'OPTIONS,PUT,GET,DELETE'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      AllowOrigin: "'*'"
 
 Resources:
   FamousFishbowlCRUDFunction:
