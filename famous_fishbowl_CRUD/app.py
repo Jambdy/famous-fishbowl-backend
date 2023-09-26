@@ -44,17 +44,17 @@ def lambda_handler(event, _):
             dynamodb.put_item(
                 TableName=table_name,
                 Item={
-                    'id': request_json['id'],
-                    'state': request_json['state'],
-                    'creationTime': request_json['creationTime'],
-                    'completionTime': request_json['completionTime'],
-                    'categories': request_json['categories'],
-                    'names': request_json['names'],
-                    'round': request_json['round'],
-                    'curTeam': request_json['curTeam'],
-                    'teamScores': request_json['teamScores'],
-                    'timeRemaining': request_json['timeRemaining'],
-                    'turnResumeTime': request_json['turnResumeTime']
+                    'id': {'S': request_json['id']},
+                    'state': {'S': request_json['state']},
+                    'creationTime': {'S': request_json['creationTime']},
+                    'completionTime': {'S': request_json['completionTime']},
+                    'categories': {'SS': request_json['categories']},
+                    'names': {'M': request_json['names']},
+                    'round': {'N': request_json['round']},
+                    'curTeam': {'N': request_json['curTeam']},
+                    'teamScores': {'NS': request_json['teamScores']},
+                    'timeRemaining': {'N': request_json['timeRemaining']},
+                    'turnResumeTime': {'S': request_json['turnResumeTime']}
                 }
             )
             body = f'Put Game {request_json["id"]}'
