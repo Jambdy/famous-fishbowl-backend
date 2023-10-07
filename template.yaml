@@ -52,12 +52,20 @@ Resources:
               ApiKeyRequired: true
 
   FishbowlDynamoDB:
-    Type: AWS::Serverless::SimpleTable
+    Type: AWS::DynamoDB::Table
     Properties:
-      PrimaryKey:
-        Name: id
-        Type: String
       TableName: famous-fishbowl
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
 
   FamousFishbowlAPI:
     Type: AWS::Serverless::Api
