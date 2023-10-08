@@ -98,7 +98,7 @@ Resources:
     Type: AWS::Serverless::Connector
     Properties:
       Source:
-        Id: FamousFishbowlCRUDFunction
+        Type: AWS::Lambda::Function
       Destination:
         Id: FishbowlDynamoDB
       Permissions:
