@@ -50,6 +50,9 @@ Resources:
             Method: delete
             Auth:
               ApiKeyRequired: true
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref FishbowlDynamoDB
 
   FamousFishbowlCategoriesFunction:
     Type: AWS::Serverless::Function
@@ -68,6 +71,9 @@ Resources:
             Method: get
             Auth:
               ApiKeyRequired: true
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref FishbowlDynamoDB
 
   FishbowlDynamoDB:
     Type: AWS::DynamoDB::Table
@@ -93,17 +99,6 @@ Resources:
         UsagePlan:
           CreateUsagePlan: PER_API
           UsagePlanName: GatewayAuthorization
-
-  LambdaDynamoDbConnector:
-    Type: AWS::Serverless::Connector
-    Properties:
-      Source:
-        Type: AWS::Lambda::Function
-      Destination:
-        Id: FishbowlDynamoDB
-      Permissions:
-        - Write
-        - Read
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
