@@ -20,7 +20,8 @@ def lambda_handler(event, _):
             id_str = event['pathParameters']['id']
             table.delete_item(
                 Key={
-                    'id': id_str
+                    'id': id_str,
+                    'sk': 'gameInstance'
                 }
             )
             body = f'Deleted item {id_str}'
@@ -28,7 +29,8 @@ def lambda_handler(event, _):
             id_str = event['pathParameters']['id']
             response = table.get_item(
                 Key={
-                    'id': id_str
+                    'id': id_str,
+                    'sk': 'gameInstance'
                 }
             )
             if 'Item' in response:
@@ -42,6 +44,7 @@ def lambda_handler(event, _):
             table.put_item(
                 Item={
                     'id': request_json['id'],
+                    'sk': 'gameInstance',
                     'state': request_json['state'],
                     'creationTime': request_json['creationTime'],
                     'completionTime': request_json['completionTime'],
