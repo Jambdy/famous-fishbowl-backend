@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from famous_fishbowl_CRUD import app
+from famous_fishbowl_CRUD import game
 
 
 @pytest.fixture()
@@ -63,7 +63,7 @@ def apigw_event():
 
 
 def test_lambda_handler(apigw_event):
-    ret = app.lambda_handler(apigw_event, "")
+    ret = game.lambda_handler(apigw_event, "")
     data = ret["body"]
 
     assert ret["statusCode"] == 400
