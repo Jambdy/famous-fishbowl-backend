@@ -18,7 +18,7 @@ def lambda_handler(event, _):
 
     try:
         response = table.query(
-            KeyConditionExpression = Key('id').eq('category')
+            KeyConditionExpression = Key('pk').eq('category')
         )
         if 'Items' in response:
             items = response['Items']
