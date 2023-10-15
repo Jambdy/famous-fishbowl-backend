@@ -54,7 +54,8 @@ def lambda_handler(event, _):
                     'curTeam': request_json['curTeam'],
                     'teamScores': request_json['teamScores'],
                     'timeRemaining': request_json['timeRemaining'],
-                    'turnResumeTime': request_json['turnResumeTime']
+                    'turnResumeTime': request_json['turnResumeTime'],
+                    'lastUpdateTime': request_json['lastUpdateTime']
                 }
             )
             body = f'Put Game {request_json["id"]}'
