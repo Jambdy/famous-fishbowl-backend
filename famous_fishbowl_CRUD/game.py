@@ -43,8 +43,8 @@ def lambda_handler(event, _):
             request_json = json.loads(event['body'])
             table.put_item(
                 Item={
-                    'pk': request_json['id'],
-                    'sk': 'gameInstance',
+                    'pk': 'gameInstance',
+                    'sk': request_json['id'],
                     'state': request_json['state'],
                     'creationTime': request_json['creationTime'],
                     'completionTime': request_json['completionTime'],
