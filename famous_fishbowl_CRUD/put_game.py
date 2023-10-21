@@ -17,7 +17,7 @@ def lambda_handler(event, _):
 
     try:
         request_json = json.loads(event['body'])
-        response = table.put_item(
+        table.put_item(
             Item={
                 'pk': 'gameInstance',
                 'sk': request_json['id'],
@@ -33,19 +33,21 @@ def lambda_handler(event, _):
                 'turnResumeTime': request_json['turnResumeTime'],
                 'lastUpdateTime': request_json['lastUpdateTime']
             },
-            ConditionExpression='lastUpdateTime < :newUpdateTime',
+            ConditionExpression='attribute_not_exists(lastUpdateTime) OR lastUpdateTime < :newUpdateTime',
             ExpressionAttributeValues={':newUpdateTime': request_json['lastUpdateTime']},
             ReturnValuesOnConditionCheckFailure='ALL_OLD'
         )
         body = f'Put Game {request_json["id"]}'
     except dynamodb.meta.client.exceptions.ConditionalCheckFailedException as err:
-        if 'Item' in response:
-            item = response['Item']
-            body = item
+        if 'Item' in err.response:
+            item = err.response['Item']
+            deserializer = boto3.dynamodb.types.TypeDeserializer()
+            item = deserializer.deserialize({'M': item})
+            body = json.dumps(item, use_decimal=True)
         else:
             body = f"Condition check failed: stale update"
         print(body)
-        status_code = 400
+        status_code = 409
     except Exception as err:
         body = f"Unexpected {err}, {type(err)}"
         print(body)
