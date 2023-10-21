@@ -18,7 +18,7 @@ Globals:
 
 Resources:
   FamousFishbowlCRUDFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: famous_fishbowl_CRUD/
       Handler: game.lambda_handler
@@ -26,14 +26,6 @@ Resources:
       Architectures:
         - x86_64
       Events:
-        PutGame:
-          Type: Api
-          Properties:
-            RestApiId: !Ref FamousFishbowlAPI
-            Path: /games
-            Method: put
-            Auth:
-              ApiKeyRequired: true
         GetGame:
           Type: Api
           Properties:
@@ -48,6 +40,27 @@ Resources:
             RestApiId: !Ref FamousFishbowlAPI
             Path: /games/{id}
             Method: delete
+            Auth:
+              ApiKeyRequired: true
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref FishbowlDynamoDB
+
+  FamousFishbowlPutGameFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: famous_fishbowl_CRUD/
+      Handler: put_game.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Events:
+        PutGame:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FamousFishbowlAPI
+            Path: /games
+            Method: put
             Auth:
               ApiKeyRequired: true
       Policies:
