@@ -17,11 +17,11 @@ Globals:
       AllowOrigin: "'*'"
 
 Resources:
-  FamousFishbowlCRUDFunction:
+  FamousFishbowlGetGameFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: famous_fishbowl_CRUD/
-      Handler: game.lambda_handler
+      Handler: get_game.lambda_handler
       Runtime: python3.11
       Architectures:
         - x86_64
@@ -32,14 +32,6 @@ Resources:
             RestApiId: !Ref FamousFishbowlAPI
             Path: /games/{id}
             Method: get
-            Auth:
-              ApiKeyRequired: true
-        DeleteGame:
-          Type: Api
-          Properties:
-            RestApiId: !Ref FamousFishbowlAPI
-            Path: /games/{id}
-            Method: delete
             Auth:
               ApiKeyRequired: true
       Policies:
