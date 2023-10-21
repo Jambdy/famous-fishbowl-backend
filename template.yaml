@@ -22,7 +22,7 @@ Resources:
     Properties:
       CodeUri: famous_fishbowl_CRUD/
       Handler: game.lambda_handler
-      Runtime: python3.9
+      Runtime: python3.11
       Architectures:
         - x86_64
       Events:
@@ -51,7 +51,7 @@ Resources:
     Properties:
       CodeUri: famous_fishbowl_CRUD/
       Handler: put_game.lambda_handler
-      Runtime: python3.9
+      Runtime: python3.11
       Architectures:
         - x86_64
       Events:
@@ -72,7 +72,7 @@ Resources:
     Properties:
       CodeUri: famous_fishbowl_CRUD/
       Handler: categories.lambda_handler
-      Runtime: python3.9
+      Runtime: python3.11
       Architectures:
         - x86_64
       Events:
