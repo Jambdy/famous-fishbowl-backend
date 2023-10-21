@@ -40,25 +40,7 @@ def lambda_handler(event, _):
                 status_code = 404
                 body = f'Game {id_str} not found'
         elif event['httpMethod'] == 'PUT':
-            request_json = json.loads(event['body'])
-            table.put_item(
-                Item={
-                    'pk': 'gameInstance',
-                    'sk': request_json['id'],
-                    'state': request_json['state'],
-                    'creationTime': request_json['creationTime'],
-                    'completionTime': request_json['completionTime'],
-                    'categories': request_json['categories'],
-                    'names': request_json['names'],
-                    'round': request_json['round'],
-                    'curTeam': request_json['curTeam'],
-                    'teamScores': request_json['teamScores'],
-                    'timeRemaining': request_json['timeRemaining'],
-                    'turnResumeTime': request_json['turnResumeTime'],
-                    'lastUpdateTime': request_json['lastUpdateTime']
-                }
-            )
-            body = f'Put Game {request_json["id"]}'
+            put_game(body, table)
     except Exception as err:
         body = f"Unexpected {err}, {type(err)}"
         print(body)
@@ -69,3 +51,27 @@ def lambda_handler(event, _):
         'body': body,
         'headers': headers
     }
+
+
+def put_game(body, table):
+    request_json = json.loads(body)
+    table.put_item(
+        Item={
+            'pk': 'gameInstance',
+            'sk': request_json['id'],
+            'state': request_json['state'],
+            'creationTime': request_json['creationTime'],
+            'completionTime': request_json['completionTime'],
+            'categories': request_json['categories'],
+            'names': request_json['names'],
+            'round': request_json['round'],
+            'curTeam': request_json['curTeam'],
+            'teamScores': request_json['teamScores'],
+            'timeRemaining': request_json['timeRemaining'],
+            'turnResumeTime': request_json['turnResumeTime'],
+            'lastUpdateTime': request_json['lastUpdateTime']
+        },
+        ConditionExpression='lastUpdateTime < :newUpdateTime',
+        ExpressionAttributeValues={':newUpdateTime': request_json['lastUpdateTime']}
+    )
+    body = f'Put Game {request_json["id"]}'
