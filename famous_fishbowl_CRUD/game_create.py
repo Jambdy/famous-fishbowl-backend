@@ -9,7 +9,7 @@ def lambda_handler(event, _):
         'Content-Type': 'application/json',
         'Access-Control-Allow-Headers': '*',
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'OPTIONS,PUT,GET,DELETE',
+        'Access-Control-Allow-Methods': 'OPTIONS,POST',
         'Access-Control-Allow-Credentials': True
     }
     body = ''
@@ -23,31 +23,15 @@ def lambda_handler(event, _):
                 'sk': request_json['id'],
                 'state': request_json['state'],
                 'creationTime': request_json['creationTime'],
-                'completionTime': request_json['completionTime'],
                 'categories': request_json['categories'],
                 'names': request_json['names'],
                 'round': request_json['round'],
                 'curTeam': request_json['curTeam'],
                 'teamScores': request_json['teamScores'],
-                'timeRemaining': request_json['timeRemaining'],
-                'turnResumeTime': request_json['turnResumeTime'],
                 'lastUpdateTime': request_json['lastUpdateTime']
-            },
-            ConditionExpression='attribute_not_exists(lastUpdateTime) OR lastUpdateTime < :newUpdateTime',
-            ExpressionAttributeValues={':newUpdateTime': request_json['lastUpdateTime']},
-            ReturnValuesOnConditionCheckFailure='ALL_OLD'
+            }
         )
-        body = f'Put Game {request_json["id"]}'
-    except dynamodb.meta.client.exceptions.ConditionalCheckFailedException as err:
-        if 'Item' in err.response:
-            item = err.response['Item']
-            deserializer = boto3.dynamodb.types.TypeDeserializer()
-            item = deserializer.deserialize({'M': item})
-            body = json.dumps(item, use_decimal=True)
-        else:
-            body = f"Condition check failed: stale update"
-        print(body)
-        status_code = 409
+        body = f'Created Game {request_json["id"]}'
     except Exception as err:
         body = f"Unexpected {err}, {type(err)}"
         print(body)

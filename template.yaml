@@ -21,7 +21,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: famous_fishbowl_CRUD/
-      Handler: get_game.lambda_handler
+      Handler: game_get.lambda_handler
       Runtime: python3.11
       Architectures:
         - x86_64
@@ -38,11 +38,11 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: !Ref FishbowlDynamoDB
 
-  FamousFishbowlPutGameFunction:
+  FamousFishbowlCreateGameFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: famous_fishbowl_CRUD/
-      Handler: put_game.lambda_handler
+      Handler: game_create.lambda_handler
       Runtime: python3.11
       Architectures:
         - x86_64
@@ -52,6 +52,27 @@ Resources:
           Properties:
             RestApiId: !Ref FamousFishbowlAPI
             Path: /games
+            Method: post
+            Auth:
+              ApiKeyRequired: true
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref FishbowlDynamoDB
+
+  FamousFishbowlUpdateGameFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: famous_fishbowl_CRUD/
+      Handler: game_update.lambda_handler
+      Runtime: python3.11
+      Architectures:
+        - x86_64
+      Events:
+        PutGame:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FamousFishbowlAPI
+            Path: /games/{id}
             Method: put
             Auth:
               ApiKeyRequired: true
@@ -111,5 +132,3 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   FamousFishbowlAPI:
     Value: !Sub "https://${FamousFishbowlAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/games/"
-  FamousFishbowlCRUDFunction:
-    Value: !GetAtt FamousFishbowlCRUDFunction.Arn
