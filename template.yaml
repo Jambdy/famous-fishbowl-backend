@@ -80,6 +80,27 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: !Ref FishbowlDynamoDB
 
+  FamousFishbowlAddNamesGameFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: famous_fishbowl_CRUD/
+      Handler: game_add_names.lambda_handler
+      Runtime: python3.11
+      Architectures:
+        - x86_64
+      Events:
+        PutGame:
+          Type: Api
+          Properties:
+            RestApiId: !Ref FamousFishbowlAPI
+            Path: /games/add-names/{id}
+            Method: put
+            Auth:
+              ApiKeyRequired: true
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref FishbowlDynamoDB
+
   FamousFishbowlCategoriesFunction:
     Type: AWS::Serverless::Function
     Properties:
