@@ -21,7 +21,7 @@ def lambda_handler(event, _):
             Item={
                 'pk': 'gameInstance',
                 'sk': request_json['id'],
-                'state': request_json['state'],
+                'gameState': request_json['gameState'],
                 'creationTime': request_json['creationTime'],
                 'categories': request_json['categories'],
                 'names': request_json['names'],

@@ -35,7 +35,7 @@ def lambda_handler(event, _):
             },
             UpdateExpression=update_string,
             ExpressionAttributeValues=expression_values,
-            ConditionExpression='attribute_not_exists(lastUpdateTime) OR lastUpdateTime < :lastUpdateTime',
+            ConditionExpression='attribute_not_exists(lastUpdateTime) OR lastUpdateTime <= :lastUpdateTime',
             ReturnValuesOnConditionCheckFailure='ALL_OLD'
         )
         body = f'Updated Game {id_str}'
