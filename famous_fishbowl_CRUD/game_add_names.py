@@ -19,9 +19,12 @@ def lambda_handler(event, _):
         id_str = event['pathParameters']['id']
         request_json = json.loads(event['body'])
 
-        update_string = 'SET names = list_append(names, :names)'
+        update_string = 'SET #names = list_append(#names, :names)'
         expression_values = {
             ':names': request_json['names']
+        }
+        expression_names = {
+            '#names': 'names'
         }
 
         table.update_item(
@@ -30,6 +33,7 @@ def lambda_handler(event, _):
                 'sk': id_str
             },
             UpdateExpression=update_string,
+            ExpressionAttributeNames=expression_names,
             ExpressionAttributeValues=expression_values
         )
         body = f'Added Names to Game {id_str}'

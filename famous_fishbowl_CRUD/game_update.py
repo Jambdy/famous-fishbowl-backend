@@ -21,10 +21,13 @@ def lambda_handler(event, _):
 
         update_string = 'SET'
         expression_values = {}
+        expression_names = {}
         for key, value in request_json.items():
-            expression_name = ':'+key
-            expression_values[expression_name] = value
-            update_string += ' ' + key + ' = ' + expression_name + ','
+            expression_value = ':'+key
+            expression_name = '#'+key
+            expression_values[expression_value] = value
+            expression_names[expression_name] = key
+            update_string += ' ' + expression_name + ' = ' + expression_value + ','
 
         update_string = update_string[0:-1]
 
@@ -34,6 +37,7 @@ def lambda_handler(event, _):
                 'sk': id_str
             },
             UpdateExpression=update_string,
+            ExpressionAttributeNames=expression_names,
             ExpressionAttributeValues=expression_values,
             ConditionExpression='attribute_not_exists(lastUpdateTime) OR lastUpdateTime <= :lastUpdateTime',
             ReturnValuesOnConditionCheckFailure='ALL_OLD'
