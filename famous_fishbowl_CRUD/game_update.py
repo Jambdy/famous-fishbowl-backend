@@ -26,8 +26,15 @@ def lambda_handler(event, _):
             expression_value = ':'+key
             expression_name = '#'+key
             expression_values[expression_value] = value
-            expression_names[expression_name] = key
-            update_string += ' ' + expression_name + ' = ' + expression_value + ','
+
+            # Set lastUpdateTime to currentUpdateTime value
+            if key == 'currentUpdateTime':
+                expression_names[expression_name] = 'lastUpdateTime'
+            else:
+                expression_names[expression_name] = key
+
+            if key != 'lastUpdateTime':
+                update_string += ' ' + expression_name + ' = ' + expression_value + ','
 
         update_string = update_string[0:-1]
 
@@ -36,10 +43,10 @@ def lambda_handler(event, _):
                 'pk': 'gameInstance',
                 'sk': id_str
             },
-            UpdateExpression=update_string,
             ExpressionAttributeNames=expression_names,
             ExpressionAttributeValues=expression_values,
-            ConditionExpression='attribute_not_exists(lastUpdateTime) OR lastUpdateTime <= :lastUpdateTime',
+            UpdateExpression=update_string,
+            ConditionExpression='attribute_not_exists(#lastUpdateTime) OR #lastUpdateTime <= :lastUpdateTime',
             ReturnValuesOnConditionCheckFailure='ALL_OLD'
         )
         body = f'Updated Game {id_str}'
