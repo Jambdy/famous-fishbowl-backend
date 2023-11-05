@@ -146,6 +146,12 @@ Resources:
         UsagePlan:
           CreateUsagePlan: PER_API
           UsagePlanName: GatewayAuthorization
+      Domain:
+        DomainName: api.fishbowl.jabdy.com
+        CertificateArn: arn:aws:acm:us-east-1:415161357326:certificate/c3cd9fdb-3af1-486e-88d1-2d82cca037e2
+        Route53:
+          HostedZoneId: ZR3BE3YX6UN94
+
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
