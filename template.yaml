@@ -199,7 +199,7 @@ Resources:
       Target: !Join
         - '/'
         - - 'integrations'
-          - !Ref SendInteg
+          - !Ref UpdateGameInteg
   UpdateGameInteg:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
@@ -208,7 +208,7 @@ Resources:
       IntegrationType: AWS_PROXY
       IntegrationUri:
         Fn::Sub:
-          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SendMessageFunction.Arn}/invocations
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateGameFunction.Arn}/invocations
   Deployment:
     Type: AWS::ApiGatewayV2::Deployment
     DependsOn:
