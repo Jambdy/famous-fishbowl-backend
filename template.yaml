@@ -169,6 +169,7 @@ Resources:
       Name: FamousFishbowlWebSocket
       ProtocolType: WEBSOCKET
       RouteSelectionExpression: "$request.body.action"
+
   DisconnectRoute:
     Type: AWS::ApiGatewayV2::Route
     Properties:
@@ -180,6 +181,7 @@ Resources:
         - '/'
         - - 'integrations'
           - !Ref DisconnectInteg
+
   DisconnectInteg:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
@@ -187,8 +189,8 @@ Resources:
       Description: Disconnect Integration
       IntegrationType: AWS_PROXY
       IntegrationUri:
-        Fn::Sub:
-          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DisconnectFunction.Arn}/invocations
+        !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DisconnectFunction.Arn}/invocations
+
   UpdateGameRoute:
     Type: AWS::ApiGatewayV2::Route
     Properties:
@@ -200,6 +202,7 @@ Resources:
         - '/'
         - - 'integrations'
           - !Ref UpdateGameInteg
+
   UpdateGameInteg:
     Type: AWS::ApiGatewayV2::Integration
     Properties:
@@ -207,8 +210,8 @@ Resources:
       Description: Update Game Integration
       IntegrationType: AWS_PROXY
       IntegrationUri:
-        Fn::Sub:
-          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateGameFunction.Arn}/invocations
+        Sub! arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateGameFunction.Arn}/invocations
+
   Deployment:
     Type: AWS::ApiGatewayV2::Deployment
     DependsOn:
@@ -216,6 +219,7 @@ Resources:
       - UpdateGameRoute
     Properties:
       ApiId: !Ref FamousFishbowlWebSocket
+
   Stage:
     Type: AWS::ApiGatewayV2::Stage
     Properties:
@@ -235,6 +239,7 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref FishbowlDynamoDB
+
   DisconnectPermission:
     Type: AWS::Lambda::Permission
     DependsOn:
@@ -261,6 +266,7 @@ Resources:
                 - 'execute-api:ManageConnections'
               Resource:
                 - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${FamousFishbowlWebSocket}/*'
+
   UpdateGamePermission:
     Type: AWS::Lambda::Permission
     DependsOn:
