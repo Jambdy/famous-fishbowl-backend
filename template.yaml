@@ -189,7 +189,8 @@ Resources:
       Description: Disconnect Integration
       IntegrationType: AWS_PROXY
       IntegrationUri:
-        !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DisconnectFunction.Arn}/invocations
+        Fn::Sub:
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DisconnectFunction.Arn}/invocations
 
   UpdateGameRoute:
     Type: AWS::ApiGatewayV2::Route
@@ -210,7 +211,8 @@ Resources:
       Description: Update Game Integration
       IntegrationType: AWS_PROXY
       IntegrationUri:
-        Sub! arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateGameFunction.Arn}/invocations
+        Fn::Sub:
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateGameFunction.Arn}/invocations
 
   Deployment:
     Type: AWS::ApiGatewayV2::Deployment
