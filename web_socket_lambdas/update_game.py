@@ -1,14 +1,15 @@
 import logging
 import json
-from util.manage_connection import add_connection
-from util.manage_game import create_game
+from util.manage_connection import add_connection, send_to_connections
+from util.manage_game import create_game, add_names
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, _):
-    connection_id = event.get('requestContext', {}).get('connectionId')
+    request_context = event.get('requestContext', {})
+    connection_id = request_context.get('connectionId')
     if connection_id is None:
         return {'statusCode': 400}
 
@@ -21,14 +22,20 @@ def lambda_handler(event, _):
         game_action = body.get('gameAction', '')
         game_id = body.get('gameId', '')
         game = body.get('game', '')
+        domain_name = request_context.get('domainName', '')
+        stage = request_context.get('stage', '')
+        endpoint_url = f"https://{domain_name}/{stage}"
 
         if game_action == 'createGame':
             create_game(game)
             add_connection(connection_id, game_id)
         elif game_action == 'joinGame':
             add_connection(connection_id, game_id)
+        elif game_action == 'addNames':
+            add_names(game_id, game)
+            send_to_connections(endpoint_url, connection_id, game)
         elif game_action == 'updateGame':
-            print('placeholder')
+            send_to_connections(endpoint_url, connection_id, {'test':'tester'})
         else:
             logger.exception(
                 f'Invalid game action: {game_action}'

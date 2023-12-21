@@ -27,3 +27,27 @@ def create_game(game_json):
         logger.debug(f'Created Game {game_json["id"]}')
     except Exception as err:
         logger.exception(f'Error during create: unexpected {err}, {type(err)}')
+
+
+def add_names(game_id, game_json):
+    try:
+        update_string = 'SET #names = list_append(#names, :names)'
+        expression_values = {
+            ':names': game_json['names']
+        }
+        expression_names = {
+            '#names': 'names'
+        }
+
+        table.update_item(
+            Key={
+                'pk': 'gameInstance',
+                'sk': game_id
+            },
+            UpdateExpression=update_string,
+            ExpressionAttributeNames=expression_names,
+            ExpressionAttributeValues=expression_values
+        )
+        logger.debug(f'Added Names to Game {game_id}')
+    except Exception as err:
+        logger.exception(f'Error during add names: unexpected {err}, {type(err)}')
