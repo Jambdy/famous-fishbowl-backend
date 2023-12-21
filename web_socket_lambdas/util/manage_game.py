@@ -53,3 +53,45 @@ def add_names(game_id, game_json):
         return response.get('Attributes')
     except Exception as err:
         logger.exception(f'Error during add names: unexpected {err}, {type(err)}')
+
+
+def update_game(game_id, game_json):
+    try:
+        update_string = 'SET'
+        expression_values = {}
+        expression_names = {}
+        for key, value in game_json.items():
+            expression_value = ':' + key
+            expression_name = '#' + key
+            expression_values[expression_value] = value
+
+            # Set lastUpdateTime to currentUpdateTime value
+            if key == 'currentUpdateTime':
+                expression_names[expression_name] = 'lastUpdateTime'
+            else:
+                expression_names[expression_name] = key
+
+            if key != 'lastUpdateTime':
+                update_string += ' ' + expression_name + ' = ' + expression_value + ','
+
+        update_string = update_string[0:-1]
+
+        response = table.update_item(
+            Key={
+                'pk': 'gameInstance',
+                'sk': game_id
+            },
+            ExpressionAttributeNames=expression_names,
+            ExpressionAttributeValues=expression_values,
+            UpdateExpression=update_string,
+            ReturnValues='ALL_NEW',
+            ConditionExpression='attribute_not_exists(#lastUpdateTime) OR #lastUpdateTime <= :lastUpdateTime',
+            ReturnValuesOnConditionCheckFailure='ALL_OLD'
+        )
+        logger.debug(f'Updated Game {game_id}')
+        return response.get('Attributes')
+    except dynamodb.meta.client.exceptions.ConditionalCheckFailedException as err:
+        logger.exception(f'Stale update for Game {game_id}')
+        return err.response.get('Item')
+    except Exception as err:
+        logger.exception(f'Error during update for Game {game_id}, Unexpected {err}, {type(err)}')

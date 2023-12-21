@@ -1,7 +1,7 @@
 import logging
 import json
 from util.manage_connection import add_connection, send_to_connections
-from util.manage_game import create_game, add_names
+from util.manage_game import create_game, add_names, update_game
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -33,11 +33,14 @@ def lambda_handler(event, _):
             add_connection(connection_id, game_id)
         elif game_action == 'addNames':
             updated_game = add_names(game_id, game)
-            send_to_connections(endpoint_url=endpoint_url, game_id=game_id, origin_connection_id=connection_id,
-                                data=updated_game)
+            if updated_game is not None:
+                send_to_connections(endpoint_url=endpoint_url, game_id=game_id, origin_connection_id=connection_id,
+                                    data=updated_game)
         elif game_action == 'updateGame':
-            send_to_connections(endpoint_url=endpoint_url, game_id=game_id, origin_connection_id=connection_id,
-                                data={'test': 'tester'})
+            updated_game = update_game(game_id, game)
+            if updated_game is not None:
+                send_to_connections(endpoint_url=endpoint_url, game_id=game_id, origin_connection_id=connection_id,
+                                    data=updated_game)
         else:
             logger.exception(
                 f'Invalid game action: {game_action}'
