@@ -39,15 +39,17 @@ def add_names(game_id, game_json):
             '#names': 'names'
         }
 
-        table.update_item(
+        response = table.update_item(
             Key={
                 'pk': 'gameInstance',
                 'sk': game_id
             },
             UpdateExpression=update_string,
             ExpressionAttributeNames=expression_names,
-            ExpressionAttributeValues=expression_values
+            ExpressionAttributeValues=expression_values,
+            ReturnValues='ALL_NEW'
         )
         logger.debug(f'Added Names to Game {game_id}')
+        return response.get('Attributes')
     except Exception as err:
         logger.exception(f'Error during add names: unexpected {err}, {type(err)}')

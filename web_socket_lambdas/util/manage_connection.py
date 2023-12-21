@@ -2,7 +2,7 @@ import boto3
 from boto3.dynamodb.conditions import Key
 from botocore.exceptions import ClientError
 import logging
-import json
+import simplejson as json
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -37,7 +37,7 @@ def send_to_connections(endpoint_url, game_id, origin_connection_id, data):
     for connection_id in connection_ids:
         try:
             send_response = api_management_client.post_to_connection(
-                Data=json.dumps(data), ConnectionId=connection_id
+                Data=json.dumps(data, use_decimal=True), ConnectionId=connection_id
             )
             logger.debug(
                 "Posted message to connection %s, got response %s.",

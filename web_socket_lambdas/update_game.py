@@ -32,10 +32,12 @@ def lambda_handler(event, _):
         elif game_action == 'joinGame':
             add_connection(connection_id, game_id)
         elif game_action == 'addNames':
-            add_names(game_id, game)
-            send_to_connections(endpoint_url, connection_id, game)
+            updated_game = add_names(game_id, game)
+            send_to_connections(endpoint_url=endpoint_url, game_id=game_id, origin_connection_id=connection_id,
+                                data=updated_game)
         elif game_action == 'updateGame':
-            send_to_connections(endpoint_url, connection_id, {'test':'tester'})
+            send_to_connections(endpoint_url=endpoint_url, game_id=game_id, origin_connection_id=connection_id,
+                                data={'test': 'tester'})
         else:
             logger.exception(
                 f'Invalid game action: {game_action}'
