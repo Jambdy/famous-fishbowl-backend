@@ -48,7 +48,7 @@ def lambda_handler(event, _):
             status_code = 500
 
     except Exception as err:
-        logger.exception(f'Unexpected {err}, {type(err)}')
+        logger.exception(f'Unexpected error: {err}, {type(err)}')
         status_code = 500
 
     return {'statusCode': status_code}
