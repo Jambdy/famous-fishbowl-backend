@@ -12,7 +12,6 @@ def lambda_handler(event, _):
         'Access-Control-Allow-Methods': 'OPTIONS,PUT',
         'Access-Control-Allow-Credentials': True
     }
-    body = ''
     status_code = 200
 
     try:
