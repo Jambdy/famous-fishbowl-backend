@@ -37,10 +37,10 @@ def lambda_handler(event, _):
                 send_to_connections(endpoint_url=endpoint_url, game_id=game_id, origin_connection_id=connection_id,
                                     data=updated_game)
         elif game_action == 'updateGame':
-            updated_game = update_game(game_id, game)
+            updated_game, return_to_sender = update_game(game_id, game)
             if updated_game is not None:
                 send_to_connections(endpoint_url=endpoint_url, game_id=game_id, origin_connection_id=connection_id,
-                                    data=updated_game)
+                                    data=updated_game, return_to_sender=return_to_sender)
         else:
             logger.exception(
                 f'Invalid game action: {game_action}'

@@ -20,7 +20,7 @@ def add_connection(connection_id, game_id):
     )
 
 
-def send_to_connections(endpoint_url, game_id, origin_connection_id, data):
+def send_to_connections(endpoint_url, game_id, origin_connection_id, data, return_to_sender=False):
     # Get non-origin connections to send ids to
     pk = f'gameConnection_{game_id}'
     key_condition_expression = Key('pk').eq(pk)
@@ -35,21 +35,23 @@ def send_to_connections(endpoint_url, game_id, origin_connection_id, data):
     )
 
     for connection_id in connection_ids:
-        try:
-            send_response = api_management_client.post_to_connection(
-                Data=json.dumps(data, use_decimal=True), ConnectionId=connection_id
-            )
-            logger.debug(
-                "Posted message to connection %s, got response %s.",
-                connection_id,
-                send_response,
-            )
-        except api_management_client.exceptions.GoneException:
-            logger.info("Connection %s is gone, removing.", connection_id)
+        if (return_to_sender and connection_id == origin_connection_id) or (
+                not return_to_sender and connection_id != origin_connection_id):
             try:
-                table.delete_item(Key={'pk': pk, 'sk': connection_id})
-            except ClientError:
-                logger.exception("Couldn't remove connection %s.", connection_id)
+                send_response = api_management_client.post_to_connection(
+                    Data=json.dumps(data, use_decimal=True), ConnectionId=connection_id
+                )
+                logger.debug(
+                    "Posted message to connection %s, got response %s.",
+                    connection_id,
+                    send_response,
+                )
+            except api_management_client.exceptions.GoneException:
+                logger.info("Connection %s is gone, removing.", connection_id)
+                try:
+                    table.delete_item(Key={'pk': pk, 'sk': connection_id})
+                except ClientError:
+                    logger.exception("Couldn't remove connection %s.", connection_id)
 
-        except ClientError:
-            logger.exception("Couldn't post to connection %s.", connection_id)
+            except ClientError:
+                logger.exception("Couldn't post to connection %s.", connection_id)

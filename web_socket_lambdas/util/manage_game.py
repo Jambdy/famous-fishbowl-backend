@@ -89,9 +89,9 @@ def update_game(game_id, game_json):
             ReturnValuesOnConditionCheckFailure='ALL_OLD'
         )
         logger.debug(f'Updated Game {game_id}')
-        return response.get('Attributes')
+        return [response.get('Attributes'), False]
     except dynamodb.meta.client.exceptions.ConditionalCheckFailedException as err:
         logger.exception(f'Stale update for Game {game_id}')
-        return err.response.get('Item')
+        return [err.response.get('Item'), True]
     except Exception as err:
         logger.exception(f'Error during update for Game {game_id}, Unexpected {err}, {type(err)}')
