@@ -212,7 +212,7 @@ Resources:
       IntegrationType: AWS_PROXY
       IntegrationUri:
         Fn::Sub:
-          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateGameFunction.Arn}/invocations
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateGameWebSocketFunction.Arn}/invocations
 
   Deployment:
     Type: AWS::ApiGatewayV2::Deployment
@@ -265,7 +265,7 @@ Resources:
       FunctionName: !Ref DisconnectFunction
       Principal: apigateway.amazonaws.com
 
-  UpdateGameFunction:
+  UpdateGameWebSocketFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: web_socket_lambdas/
@@ -289,7 +289,7 @@ Resources:
       - FamousFishbowlWebSocket
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !Ref UpdateGameFunction
+      FunctionName: !Ref UpdateGameWebSocketFunction
       Principal: apigateway.amazonaws.com
 
 Outputs:
