@@ -251,19 +251,8 @@ Resources:
       Name: socket.fishbowl.jabdy.com
       Type: A
       AliasTarget:
-        DNSName: !Ref WebSocketCustomDomain
-        HostedZoneId: ZR3BE3YX6UN94
-
-  WebSocketCustomDomainRecordSetGroup:
-    Type: AWS::Route53::RecordSetGroup
-    Properties:
-      HostedZoneId: ZR3BE3YX6UN94
-      RecordSets:
-        - Name: socket.fishbowl.jabdy.com
-          Type: A
-          AliasTarget:
-            DNSName: !GetAtt WebSocketCustomDomain.RegionalDomainName
-            HostedZoneId: !GetAtt WebSocketCustomDomain.RegionalHostedZoneId
+        DNSName: !GetAtt WebSocketCustomDomain.RegionalDomainName
+        HostedZoneId: !GetAtt WebSocketCustomDomain.RegionalHostedZoneId
 
   DisconnectFunction:
     Type: AWS::Serverless::Function
