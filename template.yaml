@@ -235,7 +235,7 @@ Resources:
     Properties:
       DomainName: socket.fishbowl.jabdy.com
       DomainNameConfigurations:
-        - CertificateArn: !Ref webSocketCustomDomainCert
+        - CertificateArn: arn:aws:acm:us-east-1:415161357326:certificate/c3cd9fdb-3af1-486e-88d1-2d82cca037e2
 
   WebSocketCustomDomainMapping:
     Type: AWS::ApiGatewayV2::ApiMapping
