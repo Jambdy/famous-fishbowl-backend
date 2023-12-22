@@ -274,6 +274,8 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref DisconnectFunction
       Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${FamousFishbowlWebSocket}/*
 
   UpdateGameWebSocketFunction:
     Type: AWS::Serverless::Function
@@ -293,7 +295,7 @@ Resources:
               Resource:
                 - !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${FamousFishbowlWebSocket}/*'
 
-  UpdateGamePermission:
+  UpdateGameWebSocketPermission:
     Type: AWS::Lambda::Permission
     DependsOn:
       - FamousFishbowlWebSocket
@@ -301,6 +303,8 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref UpdateGameWebSocketFunction
       Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${FamousFishbowlWebSocket}/*
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
