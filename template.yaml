@@ -230,6 +230,20 @@ Resources:
       DeploymentId: !Ref Deployment
       ApiId: !Ref FamousFishbowlWebSocket
 
+  WebSocketCustomDomain:
+    Type: AWS::ApiGatewayV2::DomainName
+    Properties:
+      DomainName: socket.fishbowl.jabdy.com
+      DomainNameConfigurations:
+        - CertificateArn: !Ref webSocketCustomDomainCert
+
+  WebSocketCustomDomainMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Properties:
+      ApiId: !Ref FamousFishbowlWebSocket
+      DomainName: socket.fishbowl.jabdy.com
+      Stage: !Ref Stage
+
   DisconnectFunction:
     Type: AWS::Serverless::Function
     Properties:
