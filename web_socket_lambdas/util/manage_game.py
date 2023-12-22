@@ -29,11 +29,11 @@ def create_game(game_json):
         logger.exception(f'Error during create: unexpected {err}, {type(err)}')
 
 
-def add_names(game_id, game_json):
+def add_names(game_id, names):
     try:
         update_string = 'SET #names = list_append(#names, :names)'
         expression_values = {
-            ':names': game_json['names']
+            ':names': names
         }
         expression_names = {
             '#names': 'names'

@@ -21,22 +21,25 @@ def lambda_handler(event, _):
         body = json.loads(body)
         game_action = body.get('gameAction', '')
         game_id = body.get('gameId', '')
-        game = body.get('game', '')
+
         domain_name = request_context.get('domainName', '')
         stage = request_context.get('stage', '')
         endpoint_url = f"https://{domain_name}/{stage}"
 
         if game_action == 'createGame':
+            game = body.get('game', '')
             create_game(game)
             add_connection(connection_id, game_id)
         elif game_action == 'joinGame':
             add_connection(connection_id, game_id)
         elif game_action == 'addNames':
-            updated_game = add_names(game_id, game)
+            names = body.get('names', '')
+            updated_game = add_names(game_id, names)
             if updated_game is not None:
                 send_to_connections(endpoint_url=endpoint_url, game_id=game_id, origin_connection_id=connection_id,
                                     data=updated_game)
         elif game_action == 'updateGame':
+            game = body.get('game', '')
             updated_game, return_to_sender = update_game(game_id, game)
             if updated_game is not None:
                 send_to_connections(endpoint_url=endpoint_url, game_id=game_id, origin_connection_id=connection_id,
