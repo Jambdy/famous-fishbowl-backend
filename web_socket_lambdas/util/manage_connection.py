@@ -27,8 +27,7 @@ def send_to_connections(endpoint_url, game_id, origin_connection_id, data, retur
     response = table.query(
         KeyConditionExpression=key_condition_expression,
     )
-    connection_ids = [item.get('sk', '') for item in response.get('Items', {}) if
-                      item.get('sk', '') != origin_connection_id]
+    connection_ids = [item.get('sk', '') for item in response.get('Items', {})]
 
     api_management_client = boto3.client(
         'apigatewaymanagementapi', endpoint_url=endpoint_url
