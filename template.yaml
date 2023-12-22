@@ -251,7 +251,7 @@ Resources:
       Name: socket.fishbowl.jabdy.com
       Type: A
       AliasTarget:
-        DNSName: !Sub ${WebSocketCustomDomain.DistributionDomainName}
+        DNSName: !Ref WebSocketCustomDomain
         HostedZoneId: ZR3BE3YX6UN94
 
   DisconnectFunction:
