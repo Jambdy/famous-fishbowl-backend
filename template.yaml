@@ -244,6 +244,16 @@ Resources:
       DomainName: socket.fishbowl.jabdy.com
       Stage: !Ref Stage
 
+  WebSocketCustomDomainRecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: ZR3BE3YX6UN94
+      Name: socket.fishbowl.jabdy.com
+      Type: A
+      AliasTarget:
+        DNSName: !Sub ${WebSocketCustomDomain.DistributionDomainName}
+        HostedZoneId: ZR3BE3YX6UN94
+
   DisconnectFunction:
     Type: AWS::Serverless::Function
     Properties:
