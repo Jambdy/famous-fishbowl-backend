@@ -55,12 +55,12 @@ def add_names(game_id, names):
         logger.exception(f'Error during add names: unexpected {err}, {type(err)}')
 
 
-def update_game(game_id, game_json):
+def update_game(game_id, updated_items):
     try:
         update_string = 'SET'
         expression_values = {}
         expression_names = {}
-        for key, value in game_json.items():
+        for key, value in updated_items.items():
             expression_value = ':' + key
             expression_name = '#' + key
             expression_values[expression_value] = value

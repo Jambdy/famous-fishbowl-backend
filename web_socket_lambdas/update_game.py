@@ -27,7 +27,7 @@ def lambda_handler(event, _):
         endpoint_url = f"https://{domain_name}/{stage}"
 
         if game_action == 'createGame':
-            game = body.get('game', '')
+            game = body.get('game', {})
             create_game(game)
             add_connection(connection_id, game_id)
         elif game_action == 'joinGame':
@@ -39,8 +39,8 @@ def lambda_handler(event, _):
                 send_to_connections(endpoint_url=endpoint_url, game_id=game_id, origin_connection_id=connection_id,
                                     data=updated_game)
         elif game_action == 'updateGame':
-            game = body.get('game', '')
-            updated_game, return_to_sender = update_game(game_id, game)
+            updated_items = body.get('updatedItems', {})
+            updated_game, return_to_sender = update_game(game_id, updated_items)
             if updated_game is not None:
                 send_to_connections(endpoint_url=endpoint_url, game_id=game_id, origin_connection_id=connection_id,
                                     data=updated_game, return_to_sender=return_to_sender)
