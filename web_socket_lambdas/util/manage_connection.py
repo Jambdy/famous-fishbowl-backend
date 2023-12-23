@@ -20,6 +20,14 @@ def add_connection(connection_id, game_id):
     )
 
 
+def delete_connection(connection_id, game_id):
+    table.delete_item(
+        Key={
+            'pk': f'gameConnection_{game_id}',
+            'sk': connection_id
+        }
+    )
+
 def send_to_connections(endpoint_url, game_id, origin_connection_id, data, return_to_sender=False):
     # Get non-origin connections to send ids to
     pk = f'gameConnection_{game_id}'

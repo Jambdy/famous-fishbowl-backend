@@ -1,31 +1,25 @@
 import logging
-import boto3
 from botocore.exceptions import ClientError
+from util.manage_connection import delete_connection
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, _):
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('famous-fishbowl')
-
-    connection_id = event.get('requestContext', {}).get('connectionId')
-    if connection_id is None:
+    request_context = event.get('requestContext', {})
+    connection_id = request_context.get('connectionId')
+    game_id = request_context.get('gameId')
+    if connection_id is None or game_id is None:
         return {'statusCode': 400}
 
     status_code = 200
     try:
-        table.delete_item(
-            Key={
-                'pk': 'socketConnection',
-                'sk': connection_id
-            }
-        )
-        logger.debug(f"Deleted connection {connection_id}")
+        delete_connection(connection_id=connection_id, game_id=game_id)
+        logger.debug(f"Deleted connection {connection_id} for game {game_id}")
     except ClientError:
         logger.exception(
-            f"Couldn't delete connection {connection_id}"
+            f"Couldn't delete connection {connection_id} for game {game_id}"
         )
         status_code = 503
     return status_code
