@@ -23,8 +23,7 @@ def lambda_handler(event, _):
         game_id = body.get('gameId', '')
 
         domain_name = request_context.get('domainName', '')
-        stage = request_context.get('stage', '')
-        endpoint_url = f"https://{domain_name}/{stage}"
+        endpoint_url = f"https://{domain_name}"
 
         if game_action == 'createGame':
             game = body.get('game', {})
