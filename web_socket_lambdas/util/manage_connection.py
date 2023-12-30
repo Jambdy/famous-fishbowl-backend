@@ -14,7 +14,7 @@ table = dynamodb.Table('famous-fishbowl')
 def add_connection(connection_id, game_id):
     table.put_item(
         Item={
-            'pk': f'gameConnection_{game_id}',
+            'pk': f'gameConnection_{game_id.upper()}',
             'sk': connection_id
         }
     )
@@ -23,7 +23,7 @@ def add_connection(connection_id, game_id):
 def delete_connection(connection_id, game_id):
     table.delete_item(
         Key={
-            'pk': f'gameConnection_{game_id}',
+            'pk': f'gameConnection_{game_id.upper()}',
             'sk': connection_id
         }
     )
